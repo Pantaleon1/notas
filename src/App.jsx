@@ -1,59 +1,114 @@
+import { useState } from "react";
 
-import {useState} from "react";
 function App() {
-//todo presentar el concepto de "state"
-//hooks  
   const [inputState, setInputState] = useState({
     titulo: "",
     fecha: "",
     nota: "",
+  });
 
-  }); //valor inicial del state
-  
-  
-  
-   const handleInputChange = (event) => {
-     setInputState({
-        ...inputState,                       //console.log (event.target);
-       [event.target.name]: event.target.value, 
-     });
-   };
+  const handleInputChange = (event) => {
+    // setInputState({
+    //   titulo: event.target.value,
+    //   fecha: "",
+    //   nota: "",
+    // });
+    setInputState({
+      ...inputState,
+      [event.target.name]: event.target.value,
+    });
+  };
 
+  const handleResetChange = () => {
+    setInputState({
+      ...inputState,
+      titulo: "",
+      fecha: "",
+      nota: "",
+    });
+  };
+
+  const handleClickGuardar = () => {
+    localStorage.setItem("notas", JSON.stringify(inputState));
+  };
 
   return (
-    <div className="App">
-    <h3>Notas</h3>
-    <label htmlFor="titulo"> Titulo </label>
-    <input 
-    id="titulo" 
-    name="titulo" 
-    type="titulo" 
-    onChange={handleInputChange}
-    value={inputState.titulo}
-    />
-<br></br><br></br>
+    <div className="App container">
+      <div className="row bg-light p-3 rounded m-3">
+        <div className="col p-4">
+          <h3 className="text-center">Lista</h3>
+        </div>
+        <div className="col mx-auto bg-light p-4">
+          <h3 className="text-center">Notas</h3>
+          <label style={{ width: "100%" }} htmlFor="titulo">
+            Input de Titulo
+            <input
+              className="m-2"
+              type="text"
+              id="titulo"
+              name="titulo"
+              onChange={handleInputChange}
+              value={inputState.titulo}
+              style={{ width: "100%" }}
+            />
+          </label>
 
-<label htmlFor="fecha">Fecha</label>
-    <input 
-    id="fecha" 
-    name="fecha" 
-    type="fecha" 
-    onChange={handleInputChange}
-    value={inputState.fecha}
-    />
-<br></br> <br></br>
+          <br />
+          <label style={{ width: "100%" }} htmlFor="fecha">
+            Input de Fecha
+            <input
+              className="m-2"
+              type="text"
+              id="fecha"
+              name="fecha"
+              onChange={handleInputChange}
+              value={inputState.fecha}
+              style={{ width: "100%" }}
+            />
+          </label>
 
-<label htmlFor="nota"> Nota  </label>
-    <input 
-    id="nota" 
-    name="nota" 
-    type="nota" 
-    onChange={handleInputChange}
-    value={inputState.nota}
-    />
-    </div>
+          <br />
+          <label style={{ width: "100%" }} htmlFor="nota">
+            Input de Nota
+            <input
+              className="m-2"
+              type="text"
+              id="nota"
+              name="nota"
+              onChange={handleInputChange}
+              value={inputState.nota}
+              style={{ width: "100%" }}
+            />
+          </label>
+          <hr />
+          <div className="ms-2 me-2 mt-2 row">
+            <div className="col">
+            <div className="row mx-1">
+              <button
+                onClick={handleResetChange}
+                className="btn btn-outline-dark"
+                type="button"
+              >
+                Limpiar
+              </button>
+            </div>
+            </div>
+            <div className="col">
+            <div className="row mx-1">
+              <button
+                onClick={handleClickGuardar}
+                className="btn btn-outline-primary"
+                type="button"
+              >
+                Guardar
+              </button>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+     </div>
   );
-
 }
 
 export default App;
