@@ -1,159 +1,181 @@
 import { useState } from "react";
 
+
 function App() {
-  const [inputState, setInputState] = useState({
-    titulo: "",
-    fecha: "",
-    nota: "",
-  });
-
-  const initialState = JSON.parse(localStorage.getItem("notas")) || [];
-  const [notas, setNotas] = useState(initialState);
-
+  //todo: presentar el concepto de "state"
+  
+  //hooks
+ const [inputState, setInputState] = useState({
+   titulo:"",
+   fecha:"",
+   nota:"",
+ });//valor inicial del state
+ const initialState= JSON.parse(localStorage.getItem("notas"))||[];
+ const [notas, setNotas] = useState(initialState)
+ 
   const handleInputChange = (event) => {
+    //console.log(event.target.);
     setInputState({
       ...inputState,
       [event.target.name]: event.target.value,
     });
   };
-
-  const handleResetChange = () => {
+  const handleResetBorrar= () => {
     setInputState({
       ...inputState,
-      titulo: "",
-      fecha: "",
-      nota: "",
-    });
+    titulo: "", 
+    fecha: "", 
+    nota: ""
+  });
+};
+
+
+
+  const handleResetGuardar = () => {
+    const nuevoArreglo = [...notas, inputState]
+    setNotas([...nuevoArreglo]);
+    localStorage.setItem("notas", JSON.stringify(nuevoArreglo));
+    handleResetBorrar();
   };
 
-  const handleClickGuardar = () => {
-    setNotas([...notas, inputState])
-    localStorage.setItem("notas", JSON.stringify(notas));
-    handleResetChange();
-  };
+  const handleBorrarTodo=()=>{
+    setNotas([])
+    localStorage.setItem("notas", JSON.stringify([]));
+  }
 
-  const handleBorrarNota = (index) => {
-    const nuevoArreglo = []
+  const handleBorrarNota=(index)=>{
+    const NuevoArreglo = []
 
-    notas.forEach((nota, i) => {
-      if (index !== i) {
-        nuevoArreglo.push(nota);
+    console.log(index)
+    
+    
+    notas.forEach((nota, i)=>{
+      if(index !== i){
+        NuevoArreglo.push(nota)
       }
     });
-    localStorage.setItem("notas", JSON.stringify(nuevoArreglo));
-    setNotas([...nuevoArreglo]);
-  };
+    localStorage.setItem("notas", JSON.stringify(NuevoArreglo));
+    setNotas([...NuevoArreglo]);
+  }
 
-  return (
+   return (
     <div className="App container">
-      <div className="row bg-light p-3 rounded m-3">
-        <div className="col p-4">
-          <h3 className="text-center">
-            <i class="bi bi-card-list"></i> Lista
-          </h3>
-          {notas.length === 0 ? (
-            "Al momento no tienes notas guardadas. Puedes crear una en el formulario contiguo."
-          ) : (
-            <ol>
-              {notas.map((item, index) => {
-                return (
-                  <li key={index}>
-                    {item.titulo} ({item.fecha})
-                    <i
-                      class="bi bi-x-circle mx-2"
-                      onClick={() => handleBorrarNota(index)}
-                      style={{ color: "red", fontSize: "1.1rem", cursor: "pointer"}}
-                    ></i>
-                  </li>
-                );
-              })}
-            </ol>
-          )}
-
-          {/* {arregloNotas.length !== 0 && (
-            <ol>
-              {arregloNotas.map((item) => {
-                return (
-                  <li>
-                    {item.titulo} ({item.fecha})
-                  </li>
-                );
-              })}
-            </ol>
-          )} */}
+      <div className="row">
+        <div className="col">
+          <h3>Lista</h3>
+          <frame scrolling="yes">
+          {
+            notas.length===0 &&
+            "Al momento no tienes notas guardadas. Puedes crear una en el formulario"
+          }
+            {
+            notas.length !== 0 && (
+              <ol>
+                {notas.map((item, index)=>{
+                  return(
+                    <li key={index}>
+                      {item.titulo}({item.fecha})&nbsp;&nbsp;&nbsp;
+                      <i
+                      className="bi-x-circle-fill"
+                      onClick={()=>handleBorrarNota(index)}
+                      style={{color:"grey", fontSize:"1rem", cursor:"pointer",}}
+                      ></i>
+                      <br />
+                      {item.nota}
+                      
+                    </li>
+                  )
+                })}
+              </ol>
+            )
+          }
+          </frame>
+          
+          <br />
+          
+          <button
+               type="button"
+               className="btn btn-secondary"
+               onClick={handleBorrarTodo}
+               style={{width: "100%"}}
+               disabled={
+                 notas.length===0
+               }
+          >Borrar Todo</button>
         </div>
-        <div className="col mx-auto bg-light p-4">
-          <h3 className="text-center">
-            <i class="bi bi-card-text"></i> Notas
-          </h3>
-          <label style={{ width: "100%" }} htmlFor="titulo">
-            <i class="bi bi-pencil-square mx-2"></i>Título
-            <input
-              className="m-2"
-              type="text"
-              id="titulo"
-              name="titulo"
-              onChange={handleInputChange}
-              value={inputState.titulo}
-              style={{ width: "100%" }}
+        <div className="col">
+         <h3>Notas</h3><br></br>
+         <label className="mb-2"  style={{width: "100%"}}>
+          Titulo
+         <input 
+           id="titulo" 
+           name="titulo" 
+           type="text"
+           onChange={handleInputChange}
+           value={inputState.titulo}
+           style={{width: "100%"}}
+           />
+           </label>
+           <br/>
+           <label className="mb-2"style={{width: "100%"}}>
+            Fecha 
+            <input 
+            id="fecha" 
+            name="fecha" 
+            type="date"
+            onChange={handleInputChange}
+            value={inputState.fecha}
+            style={{width: "100%"}}
             />
-          </label>
+            </label>
+            <br/>
+            <label className="bm-2"style={{width: "100%"}}>
+             Nota 
+             <textarea 
+             id="nota" 
+             name="nota" 
+             onChange={handleInputChange}
+             value={inputState.nota}
+             style={{width: "100%"}}
+             />
+            </label>
+            <hr></hr>
+      <div className="ms-2 me-2 mt-2 row">
 
-          <br />
-          <label style={{ width: "100%" }} htmlFor="fecha">
-            <i class="bi bi-calendar-week mx-2"></i>Fecha
-            <input
-              className="m-2"
-              type="date"
-              id="fecha"
-              name="fecha"
-              onChange={handleInputChange}
-              value={inputState.fecha}
-              style={{ width: "100%" }}
-            />
-          </label>
+      <div className="col">
+        <span className="row me-1">
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={handleResetBorrar}
+            disabled={inputState.titulo===""||
+                      inputState.fecha===""||
+                      inputState.nota===""}
+          >
+            Limpiar
+          </button>
+          </span>
+        </div>
 
-          <br />
-          <label style={{ width: "100%" }} htmlFor="nota">
-            <i class="bi bi-body-text mx-2"></i>Nota
-            <textarea
-              className="m-2"
-              id="nota"
-              name="nota"
-              onChange={handleInputChange}
-              value={inputState.nota}
-              style={{ width: "100%" }}
-            />
-          </label>
-          <hr />
-          <div className="ms-2 me-2 mt-2 row">
-            <div className="col">
-              <div className="row mx-1">
-                <button
-                  onClick={handleResetChange}
-                  className="btn btn-outline-dark shadow"
-                  type="button"
-                >
-                  <i class="bi bi-x-circle"></i> Limpiar
-                </button>
-              </div>
-            </div>
-            <div className="col">
-              <div className="row mx-1">
-                <button
-                  onClick={handleClickGuardar}
-                  className="btn btn-outline-primary shadow"
-                  type="button"
-                >
-                  <i class="bi bi-check-circle"></i> Guardar
-                </button>
-              </div>
+        <div className="col">
+          <span className="row ms-1">
+          
+          <button 
+            type="button"
+            className="btn btn-secondary"
+            onClick={handleResetGuardar}
+            disabled={inputState.titulo===""||
+                      inputState.fecha===""||
+                      inputState.nota===""}
+            >
+            Guardar
+          </button>
+          </span>
+
             </div>
           </div>
         </div>
       </div>
-
-
     </div>
   );
 }
