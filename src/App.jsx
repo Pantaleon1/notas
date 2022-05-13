@@ -58,6 +58,10 @@ function App() {
     setNotas([...NuevoArreglo]);
   }
 
+  const handleClickNota = (index) => {
+    setInputState({...notas[index]});
+  };
+
    return (
     <div className="App container">
       <div className="row">
@@ -73,7 +77,7 @@ function App() {
               <ol>
                 {notas.map((item, index)=>{
                   return(
-                    <li key={index}>
+                    <li key={index} onClick={() => handleClickNota(index)}>
                       {item.titulo}({item.fecha})&nbsp;&nbsp;&nbsp;
                       <i
                       className="bi-x-circle-fill"
